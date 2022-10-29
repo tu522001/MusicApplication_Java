@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SongItemActivity">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_marginTop="90dp"
+        android:layout_marginStart="90dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:srcCompat="@drawable/chi_vi_qua_yeu_em"
+            tools:layout_editor_absoluteX="108dp"
+            tools:layout_editor_absoluteY="125dp" />
+    </androidx.cardview.widget.CardView>
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="315dp"
+        android:layout_height="22dp"
+        android:layout_marginBottom="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar">
+
+
+        <ImageButton
+            android:id="@+id/imageButtonPrev"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_below="@+id/seekBarSong"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:background="@null"
+            android:src="@drawable/ic_skip_previous"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/ButtonPlay"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_below="@+id/seekBarSong"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="30dp"
+            android:background="@null"
+            android:src="@drawable/ic_play"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/imageButtonStop"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_below="@+id/seekBarSong"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="30dp"
+            android:background="@null"
+            android:src="@drawable/ic_stop"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/imageButtonNext"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_below="@+id/seekBarSong"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
+            android:background="@null"
+            android:src="@drawable/ic_next"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
