@@ -1,116 +1,187 @@
 package com.example.musicapplication_java_dh9c2;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-
-import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.example.musicapplication_java_dh9c2.adapter.CustomAdapter;
 import com.example.musicapplication_java_dh9c2.data.Database;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SongItemActivity extends AppCompatActivity {
 
     private CardView cardView;
     private SeekBar seekBar;
-    private ImageButton imageButtonPrev, ButtonPlay, imageButtonStop, imageButtonNext;
+    private ImageButton btnPrev, btnPlay, btnStop, btnNext;
+    private ImageView imageView2;
     private Database databases;
-    ArrayList<Song> arraySongs;
-    CustomAdapter adapter;
-    MediaPlayer mediaPlayer;
-//    int position = 0;
-
-    HomeActivity activity;
+    private List<Song> arraySongs = new ArrayList<Song>();
+    private CustomAdapter adapter;
+    private MediaPlayer mediaPlayer;
+    private TextView textViewName, textViewID;
+    private Song songs;
+    private Animation animation;
+    private int position;
+    //   private int INDEX = 12345;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song_item);
+
         init();
 
+        databases = new Database(this);
 
-        arraySongs = new ArrayList<Song>();
+        Bundle intent = getIntent().getExtras();
+        position = intent.getInt("position");
+
+        // hình quay
+        animation = AnimationUtils.loadAnimation(this, R.anim.disc_rotate);
+        // arrayList
         arraySongs = (ArrayList<Song>) getIntent().getSerializableExtra("ArraySong");
-        adapter = new CustomAdapter(arraySongs);
+        adapter = new CustomAdapter((ArrayList<Song>) arraySongs);
 
-//        databases = new Database(this, "a3.sqlite", null, 1);
-//        databases = (Database) getIntent().getSerializableExtra("database") ;
+        // lấy dữ liệu bài hát
+        songs = arraySongs.get(position);
+        textViewName.setText(songs.getTitle());
+        imageView2.setImageResource(songs.getImage());
+        textViewName.setVisibility(View.VISIBLE);
+        imageView2.setVisibility(View.VISIBLE);
 
-        databases = new Database(this, "a3.sqlite", null, 1);
-        // tạo bảng Công viêc
-        databases.QueryData("CREATE TABLE IF NOT EXISTS Song(Id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR(200), singer VARCHAR(200), file INTEGER, image INTEGER)");
-
-        Cursor dataSong = databases.GetData("SELECT * FROM Song");
         Log.d("LLL", String.valueOf(arraySongs));
         Log.d("MMM", "databases : " + String.valueOf(databases));
 
-        Log.d("XXX", "Activity 2 : " + String.valueOf(dataSong));
+
+        khoiTao();
+        //   hideView();
 
 
-//        activity.onClick();
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mediaPlayer.isPlaying()) {
+                    imageView2.clearAnimation();
+                    // Nếu đang phát -> pause -> đổi hình play
+                    mediaPlayer.pause();
+                    btnPlay.setImageResource(R.drawable.ic_play);
+
+                } else {
+                    databases.TTBaiHat();
+                    imageView2.startAnimation(animation);
+                    // đang ngừng -> phát  -> đổi hình pause
+                    mediaPlayer.start();
+                    btnPlay.setImageResource(R.drawable.ic_pause);
+                }
+            }
+        });
+        // tự động click vào nút play (tự play)
+        btnPlay.performClick();
+
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (position >= arraySongs.size() - 1) {
+                    position = 0;
+                    songs = arraySongs.get(position);
+                } else {
+                    position++;
+                    songs = arraySongs.get(position);
+                }
+                // xử lý sự kiện để không bị hát trồng lên nhau
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                    imageView2.clearAnimation();
+                }
+                databases.TTBaiHat();
+                khoiTao();
+                adapter.notifyDataSetChanged();
+                textViewName.setText(songs.getTitle());
+                imageView2.setImageResource(songs.getImage());
+                btnPlay.setImageResource(R.drawable.ic_pause);
+                imageView2.startAnimation(animation);
+                mediaPlayer.start();
 
 
-//        adapter.setOnItemClickListener(new CustomAdapter.OnItemClickListener() {
-//            @Override
-//            public void onClick(int position) {
-////               mediaPlayer = MediaPlayer.create(SongItemActivity.this, arraySongs.get(1).getFile());
-//                Log.d("AAA","Activity 2 position : "+ String.valueOf(position));
-//                ButtonPlay.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Toast.makeText(view.getContext(), " Button Play ", Toast.LENGTH_SHORT).show();
-//                        if (mediaPlayer.isPlaying()) {
-//                            // Nếu đang phát -> pause -> đổi hình play
-//                            mediaPlayer.pause();
-//                            ButtonPlay.setImageResource(R.drawable.ic_play);
-//                        } else {
-//                            // đang ngừng -> phát  -> đổi hình pause
-//                            mediaPlayer.start();
-//                            ButtonPlay.setImageResource(R.drawable.ic_pause);
-//                        }
-//                        Log.d("AAA","Activity 2 position : "+ String.valueOf(position));
-//                    }
-//                });
-//            }
-//        });
+            }
+        });
 
+
+        btnStop.setOnClickListener((view) -> {
+            mediaPlayer.stop();
+            mediaPlayer.release(); // dừng bài hát
+            btnPlay.setImageResource(R.drawable.ic_play);
+            khoiTao();
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mediaPlayer.stop();
+    }
+
+    private void khoiTao() {
+        mediaPlayer = MediaPlayer.create(SongItemActivity.this, arraySongs.get(position).getFile());
+        textViewName.setText(arraySongs.get(position).getTitle());
+        Log.d("IIO", "arraySongs.get(position).getFile() : " + arraySongs.get(position).getFile() +
+                " , arraySongs.get(position).getTitle() " + arraySongs.get(position).getTitle() +
+                " , position" + position);
+    }
+
+    private void hideView() {
+        textViewName.setVisibility(View.GONE);
+        imageView2.setVisibility(View.GONE);
+        textViewID.setVisibility(View.GONE);
     }
 
     private void init() {
         cardView = (CardView) findViewById(R.id.cardView);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
-        imageButtonPrev = (ImageButton) findViewById(R.id.imageButtonPrev);
-        ButtonPlay = (ImageButton) findViewById(R.id.ButtonPlay);
-        imageButtonStop = (ImageButton) findViewById(R.id.imageButtonStop);
-        imageButtonNext = (ImageButton) findViewById(R.id.imageButtonNext);
+        btnPrev = (ImageButton) findViewById(R.id.imageButtonPrev);
+        btnPlay = (ImageButton) findViewById(R.id.ButtonPlay);
+        btnStop = (ImageButton) findViewById(R.id.imageButtonStop);
+        btnNext = (ImageButton) findViewById(R.id.imageButtonNext);
+        textViewName = (TextView) findViewById(R.id.textViewName);
+        textViewID = (TextView) findViewById(R.id.textViewID);
+        imageView2 = (ImageView) findViewById(R.id.imageView2);
     }
 
 
-//    private void readSongData() {
-//        // select data
-//        Cursor dataSong = databases.GetData("SELECT * FROM Song");
-//        // moveToNext là di chuyển kế bên xem thằng kế bên có còn cơ sở dữ liệu hay không nếu nó còn sẽ là true còn nếu nó ngưng sẽ là false
-//        arraySongs.clear();
-//        while (dataSong.moveToNext()) {
-//            int id = dataSong.getInt(0);
-//            String ten = dataSong.getString(1);
-//            String singerName  = dataSong.getString(2);
-//            int file  = dataSong.getInt(3);
-//            int image  = dataSong.getInt(4);
-//
-//            arraySongs.add(new Song(id,ten,singerName,file,image));
-//        }
-//        adapter.notifyDataSetChanged();
-//    }
+    private void readSongData() {
+        // select data
+        Cursor dataSong = databases.GetData("SELECT * FROM Song");
+        // moveToNext là di chuyển kế bên xem thằng kế bên có còn cơ sở dữ liệu hay không nếu nó còn sẽ là true còn nếu nó ngưng sẽ là false
+        arraySongs.clear();
+        while (dataSong.moveToNext()) {
+            int id = dataSong.getInt(0);
+            String ten = dataSong.getString(1);
+            String singerName = dataSong.getString(2);
+            int file = dataSong.getInt(3);
+            int image = dataSong.getInt(4);
+            arraySongs.add(new Song(id, ten, singerName, file, image));
+
+            textViewName.setText(songs.getTitle());
+            imageView2.setImageResource(songs.getImage());
+            Log.d("GGG", "ID: " + String.valueOf(id) + " , Tên : " + String.valueOf(ten));
+            textViewName.setVisibility(View.VISIBLE);
+            imageView2.setVisibility(View.VISIBLE);
+
+        }
+        adapter.notifyDataSetChanged();
+    }
 
 }

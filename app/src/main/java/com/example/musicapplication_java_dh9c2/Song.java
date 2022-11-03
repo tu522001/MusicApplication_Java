@@ -17,6 +17,10 @@ public class Song implements Serializable {
         this.image = image;
     }
 
+    public Song() {
+
+    }
+
     public int getId() {
         return Id;
     }

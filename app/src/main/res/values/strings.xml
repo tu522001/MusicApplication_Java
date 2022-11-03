@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">MusicApplication_Java_DH9C2</string>
+    <string name="app_name">Music App</string>
+    <string name="list">Thư viện</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Trang chủ</string>
 </resources>

@@ -4,94 +4,123 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/d16"
     tools:context=".SongItemActivity">
 
     <androidx.cardview.widget.CardView
+        android:layout_marginTop="50dp"
         android:id="@+id/cardView"
-        android:layout_marginTop="90dp"
-        android:layout_marginStart="90dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="100dp"
+        app:cardCornerRadius="150dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/textViewName">
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            app:srcCompat="@drawable/chi_vi_qua_yeu_em"
-            tools:layout_editor_absoluteX="108dp"
-            tools:layout_editor_absoluteY="125dp" />
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/chi_vi_qua_yeu_em" />
     </androidx.cardview.widget.CardView>
 
     <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="315dp"
         android:layout_height="22dp"
-        android:layout_marginBottom="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="60dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="110dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:padding="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar">
+        app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        app:layout_constraintVertical_bias="0.0">
 
 
         <ImageButton
             android:id="@+id/imageButtonPrev"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_below="@+id/seekBarSong"
             android:layout_alignParentStart="true"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:background="@null"
+            android:layout_marginTop="5dp"
+            android:background="#4DFFFFFF"
+
             android:src="@drawable/ic_skip_previous"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/ButtonPlay"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_below="@+id/seekBarSong"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="30dp"
-            android:background="@null"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:background="#4DFFFFFF"
             android:src="@drawable/ic_play"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/imageButtonStop"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_below="@+id/seekBarSong"
             android:layout_marginStart="15dp"
-            android:layout_marginTop="30dp"
-            android:background="@null"
+            android:layout_marginTop="5dp"
+            android:background="#4DFFFFFF"
             android:src="@drawable/ic_stop"
             tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/imageButtonNext"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_below="@+id/seekBarSong"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="20dp"
-            android:background="@null"
+            android:background="#4DFFFFFF"
             android:src="@drawable/ic_next"
             tools:ignore="SpeakableTextPresentCheck" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:fontFamily="@font/elsie_swash_caps_black"
+        android:gravity="center"
+        android:textSize="26sp"
+        android:paddingBottom="20dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

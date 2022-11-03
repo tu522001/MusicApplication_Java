@@ -17,6 +17,7 @@ import com.example.musicapplication_java_dh9c2.R;
 import com.example.musicapplication_java_dh9c2.Song;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
