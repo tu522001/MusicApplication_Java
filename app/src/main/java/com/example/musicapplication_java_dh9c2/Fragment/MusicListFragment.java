@@ -1,6 +1,5 @@
 package com.example.musicapplication_java_dh9c2.Fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,22 +11,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.example.musicapplication_java_dh9c2.HomeActivity;
 import com.example.musicapplication_java_dh9c2.R;
 import com.example.musicapplication_java_dh9c2.Song;
 import com.example.musicapplication_java_dh9c2.SongItemActivity;
 import com.example.musicapplication_java_dh9c2.adapter.CustomAdapter;
-import com.example.musicapplication_java_dh9c2.data.Database;
+import com.example.musicapplication_java_dh9c2.data.MusicDAO;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class MusicListFragment extends Fragment {
     private RecyclerView recyclerView;
-    Database database;
+    MusicDAO database;
     List<Song> arraySong = new ArrayList<Song>();
     CustomAdapter adapter;
     @Override
@@ -36,7 +32,7 @@ public class MusicListFragment extends Fragment {
 
 
 
-        database = new Database(getActivity());
+        database = new MusicDAO(getActivity());
         arraySong = database.TTBaiHat();
         adapter = new CustomAdapter((ArrayList<Song>) arraySong);
 

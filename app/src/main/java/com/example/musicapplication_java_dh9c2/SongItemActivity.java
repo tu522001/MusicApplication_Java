@@ -5,69 +5,69 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.example.musicapplication_java_dh9c2.adapter.CustomAdapter;
 import com.example.musicapplication_java_dh9c2.data.Database;
+import com.example.musicapplication_java_dh9c2.data.MusicDAO;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SongItemActivity extends AppCompatActivity {
 
-    private CardView cardView;
     private SeekBar seekBar;
     private ImageButton btnPrev, btnPlay, btnStop, btnNext;
     private ImageView imageView2;
-    private Database databases;
+    private MusicDAO databases;
     private List<Song> arraySongs = new ArrayList<Song>();
     private CustomAdapter adapter;
     private MediaPlayer mediaPlayer;
-    private TextView textViewName, textViewID;
+    private TextView textViewName, textViewTimeStart, textViewTimeEnd;
     private Song songs;
     private Animation animation;
     private int position;
-    //   private int INDEX = 12345;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // ẩn thanh trạng thái   Hide the Status Bar
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_song_item);
 
         init();
 
-        databases = new Database(this);
+        databases = new MusicDAO(this);
 
+        // lấy dữ liệu từ position trong RecyclerView vào đây
         Bundle intent = getIntent().getExtras();
         position = intent.getInt("position");
 
-        // hình quay
+        // khới tạo quay hình ảnh
         animation = AnimationUtils.loadAnimation(this, R.anim.disc_rotate);
-        // arrayList
+        // lấy dữ liệu từ ArrayList của HomeActivity sang
         arraySongs = (ArrayList<Song>) getIntent().getSerializableExtra("ArraySong");
+        // gọi đến cái CustomAdapter
         adapter = new CustomAdapter((ArrayList<Song>) arraySongs);
 
-        // lấy dữ liệu bài hát
+        // lấy dữ liệu bài hát ở vị trí
         songs = arraySongs.get(position);
         textViewName.setText(songs.getTitle());
         imageView2.setImageResource(songs.getImage());
-        textViewName.setVisibility(View.VISIBLE);
-        imageView2.setVisibility(View.VISIBLE);
-
-        Log.d("LLL", String.valueOf(arraySongs));
-        Log.d("MMM", "databases : " + String.valueOf(databases));
-
-
         khoiTao();
-        //   hideView();
 
 
         btnPlay.setOnClickListener(new View.OnClickListener() {
@@ -85,9 +85,12 @@ public class SongItemActivity extends AppCompatActivity {
                     // đang ngừng -> phát  -> đổi hình pause
                     mediaPlayer.start();
                     btnPlay.setImageResource(R.drawable.ic_pause);
+                    SetTimeTotal();
+                    capNhatThoiGianBaiHat();
                 }
             }
         });
+
         // tự động click vào nút play (tự play)
         btnPlay.performClick();
 
@@ -108,24 +111,121 @@ public class SongItemActivity extends AppCompatActivity {
                 }
                 databases.TTBaiHat();
                 khoiTao();
-                adapter.notifyDataSetChanged();
-                textViewName.setText(songs.getTitle());
-                imageView2.setImageResource(songs.getImage());
-                btnPlay.setImageResource(R.drawable.ic_pause);
                 imageView2.startAnimation(animation);
                 mediaPlayer.start();
+                SetTimeTotal();
+                capNhatThoiGianBaiHat();
 
 
             }
         });
 
+        btnPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (position == 0 ) {
+                    position = arraySongs.size() - 1;
+                    songs = arraySongs.get(position);
+                }else {
+                    position--;
+                    songs = arraySongs.get(position);
+                }
+
+                if (mediaPlayer.isPlaying()){
+                    mediaPlayer.stop();
+                    imageView2.clearAnimation();
+                }
+                databases.TTBaiHat();
+                khoiTao();
+                imageView2.startAnimation(animation);
+                mediaPlayer.start();
+                SetTimeTotal();
+                capNhatThoiGianBaiHat();
+            }
+        });
+
 
         btnStop.setOnClickListener((view) -> {
-            mediaPlayer.stop();
-            mediaPlayer.release(); // dừng bài hát
-            btnPlay.setImageResource(R.drawable.ic_play);
-            khoiTao();
+
+//            if (mediaPlayer.isPlaying()) {
+                imageView2.clearAnimation();
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                btnPlay.setImageResource(R.drawable.ic_play);
+                khoiTao();
+//            }
         });
+
+
+        // bắt sự kiện trên SeekBak
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            // chạm vào kéo seekBar xong buông ra thì nó sẽ lấy giá trị seekBar cuối cùng khi buông ra
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mediaPlayer.seekTo(seekBar.getProgress());
+            }
+        });
+    }
+
+    private void capNhatThoiGianBaiHat(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SimpleDateFormat dinhDangGio = new SimpleDateFormat("mm:ss");
+                textViewTimeStart.setText(dinhDangGio.format(mediaPlayer.getCurrentPosition()));
+
+                //update progress skSong
+                seekBar.setProgress(mediaPlayer.getCurrentPosition());
+
+
+                //Kiểm tra thời gian bài hát -> nếu kết thúc  -> next
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        if (position >= arraySongs.size() - 1) {
+                            position = 0;
+                            songs = arraySongs.get(position);
+                        } else {
+                            position++;
+                            songs = arraySongs.get(position);
+                        }
+                        // xử lý sự kiện để không bị hát trồng lên nhau
+                        if (mediaPlayer.isPlaying()) {
+                            mediaPlayer.stop();
+                            imageView2.clearAnimation();
+                        }
+                        khoiTao();
+                        mediaPlayer.start();
+                        btnPlay.setImageResource(R.drawable.ic_pause);
+                        SetTimeTotal();
+                        capNhatThoiGianBaiHat();
+                    }
+                });
+                handler.postDelayed(this,500);
+            }
+        },100);
+    }
+
+    private void SetTimeTotal() {
+        // hàm xử lý sự kiện phút và giây
+        SimpleDateFormat dinhDangGio = new SimpleDateFormat("mm:ss");
+        textViewTimeEnd.setText(dinhDangGio.format(mediaPlayer.getDuration()));
+
+        // gán SeeBak = tổng thời gian bài hát
+        // tức là gán max của skSong = mediaPlayer.getDuration()
+        seekBar.setMax(mediaPlayer.getDuration());
     }
 
     @Override
@@ -137,51 +237,23 @@ public class SongItemActivity extends AppCompatActivity {
     private void khoiTao() {
         mediaPlayer = MediaPlayer.create(SongItemActivity.this, arraySongs.get(position).getFile());
         textViewName.setText(arraySongs.get(position).getTitle());
-        Log.d("IIO", "arraySongs.get(position).getFile() : " + arraySongs.get(position).getFile() +
-                " , arraySongs.get(position).getTitle() " + arraySongs.get(position).getTitle() +
-                " , position" + position);
-    }
-
-    private void hideView() {
-        textViewName.setVisibility(View.GONE);
-        imageView2.setVisibility(View.GONE);
-        textViewID.setVisibility(View.GONE);
+        textViewName.setText(songs.getTitle());
+        imageView2.setImageResource(songs.getImage());
+        btnPlay.setImageResource(R.drawable.ic_pause);
+//        imageView2.startAnimation(animation);
+        adapter.notifyDataSetChanged(); // lữu những thông tin thay đổi
     }
 
     private void init() {
-        cardView = (CardView) findViewById(R.id.cardView);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         btnPrev = (ImageButton) findViewById(R.id.imageButtonPrev);
         btnPlay = (ImageButton) findViewById(R.id.ButtonPlay);
         btnStop = (ImageButton) findViewById(R.id.imageButtonStop);
         btnNext = (ImageButton) findViewById(R.id.imageButtonNext);
         textViewName = (TextView) findViewById(R.id.textViewName);
-        textViewID = (TextView) findViewById(R.id.textViewID);
+        textViewTimeStart = (TextView) findViewById(R.id.textViewStart);
+        textViewTimeEnd = (TextView) findViewById(R.id.textViewEnd);
         imageView2 = (ImageView) findViewById(R.id.imageView2);
-    }
-
-
-    private void readSongData() {
-        // select data
-        Cursor dataSong = databases.GetData("SELECT * FROM Song");
-        // moveToNext là di chuyển kế bên xem thằng kế bên có còn cơ sở dữ liệu hay không nếu nó còn sẽ là true còn nếu nó ngưng sẽ là false
-        arraySongs.clear();
-        while (dataSong.moveToNext()) {
-            int id = dataSong.getInt(0);
-            String ten = dataSong.getString(1);
-            String singerName = dataSong.getString(2);
-            int file = dataSong.getInt(3);
-            int image = dataSong.getInt(4);
-            arraySongs.add(new Song(id, ten, singerName, file, image));
-
-            textViewName.setText(songs.getTitle());
-            imageView2.setImageResource(songs.getImage());
-            Log.d("GGG", "ID: " + String.valueOf(id) + " , Tên : " + String.valueOf(ten));
-            textViewName.setVisibility(View.VISIBLE);
-            imageView2.setVisibility(View.VISIBLE);
-
-        }
-        adapter.notifyDataSetChanged();
     }
 
 }

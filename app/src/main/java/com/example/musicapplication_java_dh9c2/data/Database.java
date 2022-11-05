@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.example.musicapplication_java_dh9c2.Account;
 import com.example.musicapplication_java_dh9c2.R;
 import com.example.musicapplication_java_dh9c2.Song;
 
@@ -14,8 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Database extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "t3.db";
-    private static final String TABLE_NAME = "Song";
+    private static final String DATABASE_NAME = "z1.db";
+    private static final String TABLE_SONG = "Song";
+    private static final String TABLE_ACCOUNT = "Account";
+    private static final String TABLE_FAVOR = "Favourites";
     private static final int VERSION = 1;
 
     public Database(Context context) {
@@ -37,9 +40,14 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String sql = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME +"(Id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR(200), singer VARCHAR(200), file INTEGER, image INTEGER)";
-        sqLiteDatabase.execSQL(sql);
+        String sql1 = "CREATE TABLE IF NOT EXISTS " + TABLE_SONG +"(Id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR(200), singer VARCHAR(200), file INTEGER, image INTEGER)";
+        String sql2 = "CREATE TABLE IF NOT EXISTS " + TABLE_ACCOUNT +"(username VARCHAR(200) PRIMARY KEY, passwd VARCHAR(100), email VARCHAR(150))";
+        String sql3 = "CREATE TABLE IF NOT EXISTS " + TABLE_FAVOR +"(IdLike INTEGER PRIMARY KEY AUTOINCREMENT, usernameID VARCHAR(200), idSong INTEGER, FOREIGN KEY(usernameID) REFERENCES Account(username), FOREIGN KEY(idSong) REFERENCES Song(Id))";
+        sqLiteDatabase.execSQL(sql1);
+        sqLiteDatabase.execSQL(sql2);
+        sqLiteDatabase.execSQL(sql3);
 
+        sqLiteDatabase.execSQL("INSERT INTO Account VALUES('admin', '12345', 'admin@mail.com')");
         sqLiteDatabase.execSQL("INSERT INTO Song VALUES(null, 'Chỉ vì quá yêu em' , 'Huy Vạc', '"+ R.raw.chi_vi_qua_yeu_em+"', '"+R.drawable.chi_vi_qua_yeu_em+"')");
         sqLiteDatabase.execSQL("INSERT INTO Song VALUES(null, 'Anh đã sai', 'Onlyc', '"+R.raw.anh_da_sai_onlyc+"', '"+R.drawable.anh_da_sai_onlyc1+"')");
         sqLiteDatabase.execSQL("INSERT INTO Song VALUES(null, 'Đợi bao lâu không đáng sợ', 'Trang Thiên', '"+R.raw.doi_bao_lau_khong_dang_so+"', '"+R.drawable.doi_bao_lau_khong_dang_so1+"')");
@@ -50,6 +58,7 @@ public class Database extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO Song VALUES(null, 'Đau để trưởng thành', 'Onlyc', '"+R.raw.dau_de_truong_thanh+"', '"+R.drawable.dau_de_truong_thanh1+"')");
         sqLiteDatabase.execSQL("INSERT INTO Song VALUES(null, 'Câu hứa chưa vẹn tròn', 'Phát Huy', '"+R.raw.cau_hua_chua_ven_tron+"', '"+R.drawable.cau_hua_chua_ven_tron+"')");
         sqLiteDatabase.execSQL("INSERT INTO Song VALUES(null, 'Sắp 30', 'Trịnh Đình Quang', '"+R.raw.sap_30+"', '"+R.drawable.sap_30+"')");
+        sqLiteDatabase.execSQL("INSERT INTO Favourites VALUES(null, 'admin', 5)");
 
 
     }
@@ -59,27 +68,4 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
-    // lấy toàn bộ thông tin bài hát
-    public List<Song> TTBaiHat() {
-        List<Song> listSong = new ArrayList<>();
-        String sql2 = "Select * from " + TABLE_NAME;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(sql2, null);
-        if (cursor.moveToFirst()) {
-            do {
-                Song s = new Song();
-                s.setId(cursor.getInt(0));
-                s.setTitle(cursor.getString(1));
-                s.setSinger(cursor.getString(2));
-                s.setFile(cursor.getInt(3));
-                s.setImage(cursor.getInt(4));
-
-                listSong.add(s);
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-
-        return listSong;
-    }
 }

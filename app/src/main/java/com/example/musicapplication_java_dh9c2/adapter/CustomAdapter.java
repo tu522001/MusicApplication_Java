@@ -1,8 +1,12 @@
 package com.example.musicapplication_java_dh9c2.adapter;
 
+import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -37,7 +41,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Song song = listSong.get(position);
         holder.bind(listSong.get(position));
         holder.singerName.setText(song.getSinger());
@@ -63,14 +67,36 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             }
         });
 
-        
+        // Hook our custom on long click item listener to the item view.
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mOnLongItemClickListener != null) {
+                    mOnLongItemClickListener.ItemLongClicked(v, position);
+                }
+
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Custom on long click item listener.
+     */
+    onLongItemClickListener mOnLongItemClickListener;
+
+    public void setOnLongItemClickListener(onLongItemClickListener onLongItemClickListener) {
+        mOnLongItemClickListener = onLongItemClickListener;
+    }
+
+    public interface onLongItemClickListener {
+        void ItemLongClicked(View v, int position);
     }
 
     private void Start(ViewHolder holder,int position) {
         mediaPlayer = MediaPlayer.create(holder.imageView.getContext(),listSong.get(position).getFile());
         mediaPlayer.start();
     }
-
 
     @Override
     public int getItemCount() {
@@ -80,7 +106,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-         TextView songName,singerName;
+        TextView songName,singerName;
         private ImageView imageView;
         private ImageButton imageButton;
 
@@ -93,6 +119,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             imageButton =  itemView.findViewById(R.id.imageButton);
             imageView =  itemView.findViewById(R.id.imageView);
 
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -103,9 +130,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             });
         }
 
+
+
+
         public void bind(Song song) {
             songName.setText(song.getTitle());
         }
+
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

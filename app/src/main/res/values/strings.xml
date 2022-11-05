@@ -4,4 +4,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="home">Trang chủ</string>
+    <string name="favorite">Yêu thích</string>
+    <string name="login">Xác nhận</string>
+    <string name="hint_passwd">Mật khẩu</string>
+    <string name="email_h">Email</string>
+    <string name="h_user">Tên đăng nhập</string>
+    <string name="ds_favorite">Danh sách yêu thích</string>
+    <string name="like">like</string>
 </resources>

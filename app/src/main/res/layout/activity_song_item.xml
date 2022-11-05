@@ -8,10 +8,10 @@
     tools:context=".SongItemActivity">
 
     <androidx.cardview.widget.CardView
-        android:layout_marginTop="50dp"
         android:id="@+id/cardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         app:cardCornerRadius="150dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +27,7 @@
 
     <SeekBar
         android:id="@+id/seekBar"
-        android:layout_width="315dp"
+        android:layout_width="350dp"
         android:layout_height="22dp"
         android:layout_marginTop="60dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -106,21 +106,35 @@
         android:layout_marginTop="55dp"
         android:fontFamily="@font/elsie_swash_caps_black"
         android:gravity="center"
-        android:textSize="26sp"
         android:paddingBottom="20dp"
         android:text="TextView"
         android:textColor="@color/white"
+        android:textSize="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewID"
+        android:textColor="@color/white"
+        android:id="@+id/textViewStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        tools:text="00:00"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+    <TextView
+        android:id="@+id/textViewEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        tools:text="00:00" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
