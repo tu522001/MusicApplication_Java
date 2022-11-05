@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="?actionBarSize"
     android:background="@drawable/peakpx"
-    tools:context=".Fragment.HomeFragment">
+    tools:context=".fragment.HomeFragment">
 
     <LinearLayout
         android:id="@+id/linearLayout2z"

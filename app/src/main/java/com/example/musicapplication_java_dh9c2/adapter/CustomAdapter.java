@@ -1,12 +1,8 @@
 package com.example.musicapplication_java_dh9c2.adapter;
 
-import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -18,30 +14,34 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.musicapplication_java_dh9c2.R;
-import com.example.musicapplication_java_dh9c2.Song;
+import com.example.musicapplication_java_dh9c2.model.Song;
+import com.example.musicapplication_java_dh9c2.data.MusicDAO;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
-    private ArrayList<Song> listSong;
+    private static ArrayList<Song> listSong;
+    private static MusicDAO dbHelper;
     private static OnItemClickListener onItemClickListener;
     private MediaPlayer mediaPlayer;
 
+    private static String usernameID;
+
     public CustomAdapter(ArrayList<Song> listSong) {
-        this.listSong = listSong;
+        CustomAdapter.listSong = listSong;
     }
+
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Song song = listSong.get(position);
         holder.bind(listSong.get(position));
         holder.singerName.setText(song.getSinger());
@@ -53,7 +53,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Position : "+song.getTitle(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Position : " + song.getTitle(), Toast.LENGTH_SHORT).show();
                 if (mediaPlayer.isPlaying()) {
                     // Nếu đang phát -> pause -> đổi hình play
                     mediaPlayer.pause();
@@ -67,34 +67,19 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             }
         });
 
-        // Hook our custom on long click item listener to the item view.
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (mOnLongItemClickListener != null) {
-                    mOnLongItemClickListener.ItemLongClicked(v, position);
-                }
-
-                return true;
+                setPosition(holder.getAdapterPosition());
+                return false;
             }
         });
+
     }
 
-    /**
-     * Custom on long click item listener.
-     */
-    onLongItemClickListener mOnLongItemClickListener;
 
-    public void setOnLongItemClickListener(onLongItemClickListener onLongItemClickListener) {
-        mOnLongItemClickListener = onLongItemClickListener;
-    }
-
-    public interface onLongItemClickListener {
-        void ItemLongClicked(View v, int position);
-    }
-
-    private void Start(ViewHolder holder,int position) {
-        mediaPlayer = MediaPlayer.create(holder.imageView.getContext(),listSong.get(position).getFile());
+    private void Start(ViewHolder holder, int position) {
+        mediaPlayer = MediaPlayer.create(holder.imageView.getContext(), listSong.get(position).getFile());
         mediaPlayer.start();
     }
 
@@ -103,22 +88,22 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         return listSong.size();
     }
 
+    private int position;
 
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView songName,singerName;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView songName, singerName;
         private ImageView imageView;
         private ImageButton imageButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
             // Define click listener for the ViewHolder's View
-
-            songName =  itemView.findViewById(R.id.songName);
-            singerName =  itemView.findViewById(R.id.singerName);
-            imageButton =  itemView.findViewById(R.id.imageButton);
-            imageView =  itemView.findViewById(R.id.imageView);
-
+            dbHelper = new MusicDAO(itemView.getContext());
+            songName = itemView.findViewById(R.id.songName);
+            singerName = itemView.findViewById(R.id.singerName);
+            imageButton = itemView.findViewById(R.id.imageButton);
+            imageView = itemView.findViewById(R.id.imageView);
+          //  itemView.setOnCreateContextMenuListener(this);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -131,19 +116,37 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         }
 
 
-
-
         public void bind(Song song) {
             songName.setText(song.getTitle());
         }
 
+
+
+    }
+
+
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+        CustomAdapter.onItemClickListener = onItemClickListener;
     }
 
     public interface OnItemClickListener {
         void onClick(int position);
+    }
+
+    public static String getUsernameID() {
+        return usernameID;
+    }
+
+    public static void setUsernameID(String usernameID) {
+        CustomAdapter.usernameID = usernameID;
     }
 }

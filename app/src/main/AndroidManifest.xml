@@ -13,21 +13,21 @@
         android:theme="@style/Theme.MusicApplication_Java_DH9C2"
         tools:targetApi="31">
         <activity
-            android:name=".FavouriteActivity"
+            android:name=".songactivity.FavouriteActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name=".useractivity.RegisterActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".useractivity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,7 +47,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".SongItemActivity"
+            android:name=".songactivity.SongItemActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

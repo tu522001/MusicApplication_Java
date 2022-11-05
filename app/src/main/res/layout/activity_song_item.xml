@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/d16"
-    tools:context=".SongItemActivity">
+    tools:context=".songactivity.SongItemActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"

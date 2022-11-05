@@ -5,14 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import androidx.annotation.Nullable;
-
-import com.example.musicapplication_java_dh9c2.Account;
 import com.example.musicapplication_java_dh9c2.R;
-import com.example.musicapplication_java_dh9c2.Song;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Database extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "z1.db";

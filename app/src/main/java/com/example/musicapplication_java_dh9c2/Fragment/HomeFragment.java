@@ -1,11 +1,10 @@
-package com.example.musicapplication_java_dh9c2.Fragment;
+package com.example.musicapplication_java_dh9c2.fragment;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +14,9 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.musicapplication_java_dh9c2.FavouriteActivity;
-import com.example.musicapplication_java_dh9c2.LoginActivity;
+import com.example.musicapplication_java_dh9c2.songactivity.FavouriteActivity;
+import com.example.musicapplication_java_dh9c2.useractivity.LoginActivity;
 import com.example.musicapplication_java_dh9c2.R;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.Objects;
 
 public class HomeFragment extends Fragment {
     TextView tvUsername;

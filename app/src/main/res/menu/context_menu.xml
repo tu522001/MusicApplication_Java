@@ -4,4 +4,7 @@
     <item
         android:id="@+id/mni_favor"
         android:title="Thêm vào danh sách yêu thích"/>
+    <item
+        android:id="@+id/mni_favor_del"
+        android:title="Xoá khỏi danh sách yêu thích"/>
 </menu>

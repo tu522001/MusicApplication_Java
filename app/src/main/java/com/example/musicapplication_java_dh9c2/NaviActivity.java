@@ -8,11 +8,9 @@ import androidx.fragment.app.FragmentTransaction;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
-import com.example.musicapplication_java_dh9c2.Fragment.HomeFragment;
-import com.example.musicapplication_java_dh9c2.Fragment.MusicListFragment;
+import com.example.musicapplication_java_dh9c2.fragment.HomeFragment;
+import com.example.musicapplication_java_dh9c2.fragment.MusicListFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 

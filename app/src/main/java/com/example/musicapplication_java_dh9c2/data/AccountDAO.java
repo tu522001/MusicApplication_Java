@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.musicapplication_java_dh9c2.Account;
+import com.example.musicapplication_java_dh9c2.model.Account;
 
 public class AccountDAO {
     private Database database;

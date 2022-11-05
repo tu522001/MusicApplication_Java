@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background"
     android:layout_marginBottom="?actionBarSize"
-    tools:context=".Fragment.MusicListFragment">
+    tools:context=".fragment.MusicListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/MusicListView"
