@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="76dp"
         android:background="@drawable/btn_bg"
-        android:text="Thoát"
+        android:text="Quay lại"
         android:textColor="#FFFFFF"
         android:textSize="15sp"
         app:backgroundTint="#BF2419"

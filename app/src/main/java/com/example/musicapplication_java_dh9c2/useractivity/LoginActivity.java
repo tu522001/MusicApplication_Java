@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.musicapplication_java_dh9c2.model.Account;
 import com.example.musicapplication_java_dh9c2.NaviActivity;
@@ -78,14 +79,14 @@ public class LoginActivity extends AppCompatActivity {
 
             }
             else {
-                Snackbar.make(v, "Vui lòng kiểm tra lại thông tin đăng nhập!", Snackbar.LENGTH_SHORT).show();
+                Toast.makeText(this, "Vui lòng kiểm tra lại thông tin đăng nhập", Toast.LENGTH_SHORT).show();
+
             }
         });
 
         textViewSignUp.setOnClickListener((view) -> {
             Intent regInt = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(regInt);
-            finish();
         });
     }
 
